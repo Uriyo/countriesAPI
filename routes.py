@@ -9,7 +9,7 @@ def init_routes(app):
     def get_all_countries():
         sort_by = request.args.get('sort_by', 'a_to_z')
         page = int(request.args.get('page', 1))
-        limit = int(request.args.get('limit', 10))
+        limit = int(request.args.get('limit', 20))
         name = request.args.get('name', None)
         region = request.args.get('region', None)
         subregion = request.args.get('subregion', None)
@@ -22,7 +22,9 @@ def init_routes(app):
             query = query.filter_by(region=region)
         if subregion:
             query = query.filter_by(subregion=subregion)
-
+        
+        print(f"Sort by: {sort_by}")
+        
         if sort_by == 'a_to_z':
             query = query.order_by(Country.name.asc())
         elif sort_by == 'z_to_a':
@@ -35,7 +37,7 @@ def init_routes(app):
             query = query.order_by(Country.area.desc())
         elif sort_by == 'area_low_to_high':
             query = query.order_by(Country.area.asc())
-
+        print(str(query))
         paginated_countries = query.paginate(page=page, per_page=limit, error_out=False)
 
         countries_list = [{
